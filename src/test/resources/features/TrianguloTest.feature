@@ -1,10 +1,11 @@
 #language:es
-
+  @triangulo
   Característica: Validar si las medidas de los lados ingresados forman un triangulo
     Como usuario validador
     Quiero ingresar la medida de tres lados
     Para validar la creacion correcta de un triangulo
 
+    @triangulo_01
     Esquema del escenario: [HAPPY PATH] Validar la creacion exitosa de un triangulo segun las medidas ingresadas
       Dado el usuario ingresa a la web "Triangule Calculator"
       Cuando ingresa el nombre del usuario
