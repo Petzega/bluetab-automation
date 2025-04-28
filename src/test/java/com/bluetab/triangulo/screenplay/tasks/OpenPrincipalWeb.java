@@ -13,7 +13,6 @@ public class OpenPrincipalWeb implements Task {
     }
 
     public static OpenPrincipalWeb open(String url) {
-        System.out.println("LOG   + " + url);
         return new OpenPrincipalWeb(url);
     }
 

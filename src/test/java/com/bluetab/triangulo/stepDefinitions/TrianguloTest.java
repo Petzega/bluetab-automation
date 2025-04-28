@@ -69,4 +69,24 @@ public class TrianguloTest {
                 seeThat("Se validan los resultados", actor -> result, equalTo(expected))
         );
     }
+
+    @SneakyThrows
+    @Entonces("el sistema valida que los lados ingresados no forman un triangulo con el mensaje de error {string}")
+    public void validateTriangleError(String error) {
+        String base64Image = theActorInTheSpotlight().asksFor(GetCanvasBase64.from(TriangleCalculatorPage.CANVA_NAME));
+        byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Image);
+        BufferedImage img = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes));
+
+        BufferedImage croppedProcessedImg = theActorInTheSpotlight().asksFor(GetProcessedImage.from(img));
+
+        String result = theActorInTheSpotlight().asksFor(GetTextFromImage.from(croppedProcessedImg));
+
+        String expected = PublicVariables.TRIANGLE_ERROR_MAP.getOrDefault(
+                error.toLowerCase(), error.toLowerCase()
+        );
+
+        theActorInTheSpotlight().should(
+                seeThat("Se mensaje de error", actor -> result, equalTo(expected))
+        );
+    }
 }

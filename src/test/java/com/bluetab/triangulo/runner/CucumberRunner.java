@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
         plugin = {"pretty", "json:_target/cucumber/cucumber.json", "html:target/cucumber-reports.html"},
         features = "src/test/resources/features",
         glue = {"com.bluetab.triangulo.stepDefinitions", "com.bluetab.triangulo.utils"},
-        tags = "@triangulo_01",
+        tags = "@triangulo",
         snippets = CucumberOptions.SnippetType.CAMELCASE)
 public class CucumberRunner {
 }
