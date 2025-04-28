@@ -1,9 +1,12 @@
 package com.bluetab.triangulo.stepDefinitions;
 
 import com.bluetab.triangulo.screenplay.questions.GetCanvasBase64;
+import com.bluetab.triangulo.screenplay.questions.GetProcessedImage;
+import com.bluetab.triangulo.screenplay.questions.GetTextFromImage;
 import com.bluetab.triangulo.screenplay.tasks.OpenPrincipalWeb;
 import com.bluetab.triangulo.screenplay.tasks.SetData;
 import com.bluetab.triangulo.screenplay.userInterface.TriangleCalculatorPage;
+import com.bluetab.triangulo.utils.PublicVariables;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
@@ -13,19 +16,15 @@ import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.model.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.abilities.BrowseTheWeb;
-import net.sourceforge.tess4j.ITessAPI;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import net.thucydides.model.util.EnvironmentVariables;
 import org.openqa.selenium.WebDriver;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
+import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.*;
+import static org.hamcrest.Matchers.equalTo;
 
 
 public class TrianguloTest {
@@ -58,48 +57,16 @@ public class TrianguloTest {
         byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Image);
         BufferedImage img = ImageIO.read(new java.io.ByteArrayInputStream(imageBytes));
 
-        File outputFile = new File("src/test/resources/img/triangle.png");
-        ImageIO.write(img, "png", outputFile);
+       BufferedImage croppedProcessedImg = theActorInTheSpotlight().asksFor(GetProcessedImage.from(img));
 
-        int x = 0;
-        int y = 275;
-        int width = 80;
-        int height = 25;
-        BufferedImage croppedImg = img.getSubimage(x, y, width, height);
+       String result = theActorInTheSpotlight().asksFor(GetTextFromImage.from(croppedProcessedImg));
 
-        // 3. Preprocesamiento: Escala de grises + escalado 15x
-        BufferedImage processedImg = new BufferedImage(
-                croppedImg.getWidth() * 15,  // Escala más agresiva
-                croppedImg.getHeight() * 15,
-                BufferedImage.TYPE_BYTE_GRAY
+       String expected = PublicVariables.TRIANGLE_TYPE_MAP.getOrDefault(
+               triangle.toLowerCase(), triangle.toLowerCase()
+       );
+
+        theActorInTheSpotlight().should(
+                seeThat("Se validan los resultados", actor -> result, equalTo(expected))
         );
-        Graphics2D g = processedImg.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC); // Mejor calidad
-        g.drawImage(croppedImg, 0, 0, processedImg.getWidth(), processedImg.getHeight(), null);
-        g.dispose();
-
-        // Eliminar 13 píxeles de largo a la izquierda
-        int newWidth = processedImg.getWidth() - 15;
-        BufferedImage croppedProcessedImg = processedImg.getSubimage(15, 0, newWidth, processedImg.getHeight());
-
-        // Guardar la imagen procesada recortada para depuración
-        File debugFile = new File("src/test/resources/img/triangle_text.png");
-        ImageIO.write(croppedProcessedImg, "png", debugFile);
-
-        ITesseract tesseract = new Tesseract();
-        tesseract.setDatapath("src/test/resources/tessdata");
-        tesseract.setLanguage("eng");
-
-        String ocrResult;
-        try {
-            ocrResult = tesseract.doOCR(croppedProcessedImg)
-                    .trim()
-                    .replaceAll("[^a-zA-Z]", "")
-                    .toLowerCase();
-
-            System.out.println("OCR Result: " + ocrResult);
-        } catch (TesseractException e) {
-            throw new AssertionError("OCR Error: " + e.getMessage());
-        }
     }
 }
