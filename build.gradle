@@ -15,9 +15,9 @@ repositories {
 }
 
 ext {
-    serenityVersion = '3.6.21'
-    junitVersion = '5.9.3'
-    tess4jVersion = '5.7.0'
+    serenityVersion = '4.0.30'
+    junitVersion    = '4.13.2'
+    tess4jVersion   = '5.7.0'
 }
 
 dependencies {
@@ -25,12 +25,21 @@ dependencies {
     testImplementation "net.serenity-bdd:serenity-junit:${serenityVersion}"
     testImplementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
     testImplementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
-    testImplementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
+//    testImplementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
     testImplementation "net.serenity-bdd:serenity-assertions:${serenityVersion}"
+    implementation "org.slf4j:slf4j-simple:2.0.10"
+
     testImplementation "io.cucumber:cucumber-junit:7.14.0"
     testImplementation "junit:junit:4.13.2"
+
     implementation "net.sourceforge.tess4j:tess4j:${tess4jVersion}"
-    implementation 'io.github.bonigarcia:webdrivermanager:5.3.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'org.opencv:opencv:4.5.2'
 }
 
 test {
