@@ -63,7 +63,7 @@ public class TrianguloTest {
 
         int x = 0;
         int y = 275;
-        int width = 60;
+        int width = 80;
         int height = 25;
         BufferedImage croppedImg = img.getSubimage(x, y, width, height);
 
@@ -79,24 +79,22 @@ public class TrianguloTest {
         g.dispose();
 
         // Eliminar 13 píxeles de largo a la izquierda
-        int newWidth = processedImg.getWidth() - 30;
-        BufferedImage croppedProcessedImg = processedImg.getSubimage(30, 0, newWidth, processedImg.getHeight());
+        int newWidth = processedImg.getWidth() - 15;
+        BufferedImage croppedProcessedImg = processedImg.getSubimage(15, 0, newWidth, processedImg.getHeight());
 
         // Guardar la imagen procesada recortada para depuración
-        File debugFile = new File("src/test/resources/img/debug_english_text_cropped.png");
+        File debugFile = new File("src/test/resources/img/triangle_text.png");
         ImageIO.write(croppedProcessedImg, "png", debugFile);
 
         ITesseract tesseract = new Tesseract();
         tesseract.setDatapath("src/test/resources/tessdata");
         tesseract.setLanguage("eng");
-        tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_SINGLE_WORD); // Modo para una palabra
-        tesseract.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_LSTM_ONLY); // Mejor precisión
 
         String ocrResult;
         try {
             ocrResult = tesseract.doOCR(croppedProcessedImg)
                     .trim()
-                    .replaceAll("[^a-zA-Z]", "") // Solo letras inglesas
+                    .replaceAll("[^a-zA-Z]", "")
                     .toLowerCase();
 
             System.out.println("OCR Result: " + ocrResult);

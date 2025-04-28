@@ -15,3 +15,4 @@
         | usuario | 3                | 4                | 5                | Escaleno          |
         | usuario | 3                | 3                | 3                | Equilatero          |
         | usuario | 3                | 3                | 4                | Isosceles          |
+        | usuario | 3                | 90                | 4                | Not a triangle          |

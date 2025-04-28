@@ -38,8 +38,6 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-    implementation 'org.opencv:opencv:4.5.2'
 }
 
 test {
